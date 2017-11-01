@@ -2,7 +2,7 @@
 Project Gutenberg """
 
 import string
-
+import os
 
 def get_word_list(file_name):
     """ Reads the specified project Gutenberg book.  Header comments,
@@ -10,8 +10,16 @@ def get_word_list(file_name):
     returns a list of the words used in the book as a list.
     All words are converted to lower case.
     """
-    pass
+    total_list = []
+    filedir = os.path.abspath(file_name)
+    content = open(filedir)
 
+    for line in content:
+        for punctuation in string.punctuation:
+            line = line.replace(punctuation,' ')
+        total_list.extend(line.split())
+
+    return total_list
 
 def get_top_n_words(word_list, n):
     """ Takes a list of words as input and returns a list of the n most frequently
@@ -23,8 +31,14 @@ def get_top_n_words(word_list, n):
     returns: a list of n most frequently occurring words ordered from most
     frequently to least frequentlyoccurring
     """
-    pass
+    word_frequency = dict()
+    for word in word_list:
+        if word not in word_frequency:
+            word_frequency[word] = 1
+        else:
+            word_frequency[word] += 1
 
-if __name__ == "__main__":
-    print("Running WordFrequency Toolbox")
-    print(string.punctuation)
+    sorted_list = sorted(word_frequency, key=word_frequency.__getitem__, reverse=True)
+    return sorted_list[0:n]
+
+get_top_n_words(get_word_list('pg32325.txt'), 100)
